@@ -2,10 +2,93 @@ import { Grid } from "./grid.js";
 import { Tile } from "./tile.js";
 const gameBoard = document.querySelector('.game-board')
 const grid = new Grid(gameBoard);
+let touchStartCoordinateX = null;
+let touchStartCoordinateY = null;
+
+
 
 grid.getRandomEmptyCell().linkTile(new Tile(gameBoard))
 grid.getRandomEmptyCell().linkTile(new Tile(gameBoard))
 setKeydownListenerOnce();
+
+
+function handleTouchMove(event) {
+  let touchCoordinateX = event.changedTouches[0].clientX 
+  let touchCoordinateY = event.changedTouches[0].clientY 
+  if (touchStartCoordinateX === touchCoordinateX || touchStartCoordinateY === touchCoordinateY) {
+    setSwipeListenerOnce();
+    return false;
+  }
+
+  
+  console.log(touchCoordinateX, touchCoordinateY)
+
+  let xDiff = touchStartCoordinateX - touchCoordinateX;
+  let yDiff = touchStartCoordinateY - touchCoordinateY;
+
+  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+    if (xDiff > 0) {
+      if (!canMoveLeft()) {
+        setSwipeListenerOnce();
+        return;
+      }
+      moveLeft();
+    }
+    else {
+      if (!canMoveRight()) {
+        setSwipeListenerOnce();
+        return;
+      }
+      moveRight();
+    }
+  }
+  else {
+    if (yDiff > 0) {
+      if (!canMoveUp()) {
+        setSwipeListenerOnce();
+        return;
+      }
+      moveUp();
+    }
+    else {
+      if (!canMoveDown()) {
+        setSwipeListenerOnce();
+        return;
+      }
+      moveDown();
+    }
+  }
+
+  if (!canMoveDown() && !canMoveLeft() && !canMoveRight()  && !canMoveUp()) {
+    alert('Не получилось. Попробуйте еще раз. Обновите страницу для новой игры.')
+    return
+  }
+  
+
+  const newTile = new Tile(gameBoard);
+  grid.getRandomEmptyCell().linkTile(newTile);
+  setSwipeListenerOnce();
+}
+
+
+function handleTouchStart(event) {
+  const firstTouch = event.touches[0];
+
+  touchStartCoordinateX = firstTouch.clientX;
+  touchStartCoordinateY = firstTouch.clientY;
+  console.log(touchStartCoordinateX, touchStartCoordinateY)
+} 
+
+function setSwipeListenerOnce() {
+  window.addEventListener('touchstart', handleTouchStart, {once : true});
+  window.addEventListener('touchend', handleTouchMove, {once : true});
+}
+
+
+
+
+
+setSwipeListenerOnce();
 
 function setKeydownListenerOnce()  {
   window.addEventListener('keydown', handleInput, {once: true} )
@@ -48,13 +131,16 @@ function handleInput(event) {
   }
 
   
-  const newTile = new Tile(gameBoard);
-  grid.getRandomEmptyCell().linkTile(newTile);
-
   if (!canMoveDown() && !canMoveLeft() && !canMoveRight()  && !canMoveUp()) {
     alert('Не получилось. Попробуйте еще раз. Обновите страницу для новой игры.')
     return
   }
+
+
+  const newTile = new Tile(gameBoard);
+  grid.getRandomEmptyCell().linkTile(newTile);
+
+  
   
 
   setKeydownListenerOnce();
