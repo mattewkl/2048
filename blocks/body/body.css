@@ -4,5 +4,5 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: none;
 }
