@@ -1,6 +1,6 @@
 .game-board {
-  --cell-size: 20vmin;
-  --gap-size: 2vmin;
+  --cell-size: 16vmin;
+  --gap-size: 1.6vmin;
   display: grid;
   position: relative;
   grid-template-columns: repeat(4, var(--cell-size));

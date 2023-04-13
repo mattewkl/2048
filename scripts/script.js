@@ -2,9 +2,18 @@ import { Grid } from "./grid.js";
 import { Tile } from "./tile.js";
 const gameBoard = document.querySelector('.game-board')
 const grid = new Grid(gameBoard);
+const losePopup = document.querySelector('.popup_type_lose')
+
+let moves = 0;
+const scoreElement = document.querySelector('.score__value')
+function increaseMoves() {
+  moves++;
+  scoreElement.textContent = moves;
+
+}
+
 let touchStartCoordinateX = null;
 let touchStartCoordinateY = null;
-
 
 
 grid.getRandomEmptyCell().linkTile(new Tile(gameBoard))
@@ -33,6 +42,7 @@ function handleTouchMove(event) {
         return;
       }
       moveLeft();
+      increaseMoves()
     }
     else {
       if (!canMoveRight()) {
@@ -40,6 +50,7 @@ function handleTouchMove(event) {
         return;
       }
       moveRight();
+      increaseMoves()
     }
   }
   else {
@@ -49,6 +60,7 @@ function handleTouchMove(event) {
         return;
       }
       moveUp();
+      increaseMoves()
     }
     else {
       if (!canMoveDown()) {
@@ -56,14 +68,15 @@ function handleTouchMove(event) {
         return;
       }
       moveDown();
+      increaseMoves()
     }
   }
 
   if (!canMoveDown() && !canMoveLeft() && !canMoveRight()  && !canMoveUp()) {
-    alert('Не получилось. Попробуйте еще раз. Обновите страницу для новой игры.')
+    losePopup.classList.add('popup_opened')
     return
   }
-  
+
 
   const newTile = new Tile(gameBoard);
   grid.getRandomEmptyCell().linkTile(newTile);
@@ -103,6 +116,7 @@ function handleInput(event) {
         return;
       }
       moveUp();
+      increaseMoves()
       break;
     case "ArrowDown":
       if (!canMoveDown()) {
@@ -110,6 +124,7 @@ function handleInput(event) {
         return;
       }
       moveDown()
+      increaseMoves()
       break;
     case "ArrowLeft":
       if (!canMoveLeft()) {
@@ -117,6 +132,7 @@ function handleInput(event) {
         return;
       }
       moveLeft()
+      increaseMoves()
       break;
     case "ArrowRight":
       if (!canMoveRight()) {
@@ -124,24 +140,20 @@ function handleInput(event) {
         return;
       }
       moveRight();
+      increaseMoves()
       break;
     default:
       setKeydownListenerOnce();
       return;
   }
 
-  
-  if (!canMoveDown() && !canMoveLeft() && !canMoveRight()  && !canMoveUp()) {
-    alert('Не получилось. Попробуйте еще раз. Обновите страницу для новой игры.')
-    return
-  }
-
-
   const newTile = new Tile(gameBoard);
   grid.getRandomEmptyCell().linkTile(newTile);
 
-  
-  
+  if (!canMoveDown() && !canMoveLeft() && !canMoveRight()  && !canMoveUp()) {
+    losePopup.classList.add('popup_opened')
+    return
+  }
 
   setKeydownListenerOnce();
 }

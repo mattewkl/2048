@@ -1,3 +1,6 @@
 @import url('../blocks/body/body.css');
 @import url('../blocks/standartblock/standartblock.css');
 @import url('../blocks/game-board/game-board.css');
+@import url('../blocks/score/score.css');
+@import url('../blocks/popup/popup.css');
+@import url('../blocks/normal-width/normal-width.css');
