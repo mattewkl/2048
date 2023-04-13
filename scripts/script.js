@@ -72,14 +72,17 @@ function handleTouchMove(event) {
     }
   }
 
+  
+
+  const newTile = new Tile(gameBoard);
+  grid.getRandomEmptyCell().linkTile(newTile);
+  
   if (!canMoveDown() && !canMoveLeft() && !canMoveRight()  && !canMoveUp()) {
     losePopup.classList.add('popup_opened')
     return
   }
 
 
-  const newTile = new Tile(gameBoard);
-  grid.getRandomEmptyCell().linkTile(newTile);
   setSwipeListenerOnce();
 }
 
